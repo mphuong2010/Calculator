@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (btn == btnEq) {
             try {
                 String bieuThuc = bieuThucDangNhap.toString().replace("×", "*").replace("÷", "/");
-                double ketQua = tinhKetQua(bieuThuc);
+                double ketQua = tinhBieuThuc(bieuThuc);
                 tvExpression.setText(bieuThucDangNhap.toString());
                 tvResult.setText(dinhDangKetQua(ketQua));
                 bieuThucDangNhap.setLength(0);
@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private double tinhKetQua(String bieuThuc) {
+    private double tinhBieuThuc(String bieuThuc) {
         return new Object() {
             int viTri = -1, kyTu;
 
@@ -160,56 +160,57 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 kyTu = (++viTri < bieuThuc.length()) ? bieuThuc.charAt(viTri) : -1;
             }
 
-            boolean anKyTu(int kyTuCanAn) {
+            boolean anKyTu(int kyTuAn) {
                 while (kyTu == ' ') kyTuTiepTheo();
-                if (kyTu == kyTuCanAn) {
+                if (kyTu == kyTuAn) {
                     kyTuTiepTheo();
                     return true;
                 }
                 return false;
             }
 
-            double phanTich() {
+            double docBieuThuc() {
                 kyTuTiepTheo();
-                double x = bieuThucCongTru();
-                if (viTri < bieuThuc.length()) throw new RuntimeException("Ký tự lạ: " + (char) kyTu);
+                double x = CongTru();
+                if (viTri < bieuThuc.length()) throw new RuntimeException("Ký tự không hợp lệ: " + (char) kyTu);
                 return x;
             }
 
-            double bieuThucCongTru() {
-                double x = bieuThucNhanChia();
+            double CongTru() {
+                double x = NhanChia();
                 while (true) {
-                    if (anKyTu('+')) x += bieuThucNhanChia();
-                    else if (anKyTu('-')) x -= bieuThucNhanChia();
+                    if (anKyTu('+')) x += NhanChia();
+                    else if (anKyTu('-')) x -= NhanChia();
                     else return x;
                 }
             }
 
-            double bieuThucNhanChia() {
-                double x = nhanSo();
+            double NhanChia() {
+                double x = So();
                 while (true) {
-                    if (anKyTu('*')) x *= nhanSo();
-                    else if (anKyTu('/')) x /= nhanSo();
-                    else if (anKyTu('%')) x %= nhanSo();
+                    if (anKyTu('*')) x *= So();
+                    else if (anKyTu('/')) x /= So();
+                    else if (anKyTu('%')) x %= So();
                     else return x;
                 }
             }
 
-            double nhanSo() {
-                if (anKyTu('+')) return nhanSo();
-                if (anKyTu('-')) return -nhanSo();
+            double So() {
+                if (anKyTu('+')) return So(); // Dương
+                if (anKyTu('-')) return -So(); // Âm
 
                 double x;
-                int viTriBatDau = this.viTri;
+                int start = viTri;
                 if ((kyTu >= '0' && kyTu <= '9') || kyTu == '.') {
                     while ((kyTu >= '0' && kyTu <= '9') || kyTu == '.') kyTuTiepTheo();
-                    x = Double.parseDouble(bieuThuc.substring(viTriBatDau, this.viTri));
+                    x = Double.parseDouble(bieuThuc.substring(start, viTri));
                 } else {
                     throw new RuntimeException("Ký tự không hợp lệ: " + (char) kyTu);
                 }
 
                 return x;
             }
-        }.phanTich();
+        }.docBieuThuc();
     }
+
 }
