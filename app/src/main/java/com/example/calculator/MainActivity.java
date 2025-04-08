@@ -17,9 +17,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button btn0, btn1, btn2, btn3, btn4, btn5, btn6, btn7, btn8, btn9;
     private Button btnDot, btnAdd, btnSub, btnMul, btnDiv, btnMod, btnDel, btnEq, btnBack;
 
-    private StringBuilder currentExpression = new StringBuilder();
-    private boolean lastInputIsOperator = false;
-    private boolean justEvaluated = false;
+    private StringBuilder bieuThucDangNhap = new StringBuilder();
+    private boolean kyTuCuoiLaToanTu = false;
+    private boolean vuaTinhXong = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,23 +71,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Button btn = (Button) v;
 
         if (btn == btnDel) {
-            currentExpression.setLength(0);
+            bieuThucDangNhap.setLength(0);
             tvExpression.setText("");
             tvResult.setText("0");
-            justEvaluated = false;
-            lastInputIsOperator = false;
+            vuaTinhXong = false;
+            kyTuCuoiLaToanTu = false;
             return;
         }
 
         if (btn == btnBack) {
-            if (currentExpression.length() > 0) {
-                currentExpression.deleteCharAt(currentExpression.length() - 1);
-                tvResult.setText(currentExpression.toString());
-                if (currentExpression.length() > 0) {
-                    char lastChar = currentExpression.charAt(currentExpression.length() - 1);
-                    lastInputIsOperator = isOperator(lastChar);
+            if (bieuThucDangNhap.length() > 0) {
+                bieuThucDangNhap.deleteCharAt(bieuThucDangNhap.length() - 1);
+                tvResult.setText(bieuThucDangNhap.toString());
+                if (bieuThucDangNhap.length() > 0) {
+                    char kyTuCuoi = bieuThucDangNhap.charAt(bieuThucDangNhap.length() - 1);
+                    kyTuCuoiLaToanTu = laToanTu(kyTuCuoi);
                 } else {
-                    lastInputIsOperator = false;
+                    kyTuCuoiLaToanTu = false;
                 }
             }
             return;
@@ -95,43 +95,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (btn == btnEq) {
             try {
-                String expr = currentExpression.toString().replace("×", "*").replace("÷", "/");
-                double result = eval(expr);
-                tvExpression.setText(currentExpression.toString());
-                tvResult.setText(formatResult(result));
-                currentExpression.setLength(0);
-                currentExpression.append(result);
-                justEvaluated = true;
+                String bieuThuc = bieuThucDangNhap.toString().replace("×", "*").replace("÷", "/");
+                double ketQua = tinhKetQua(bieuThuc);
+                tvExpression.setText(bieuThucDangNhap.toString());
+                tvResult.setText(dinhDangKetQua(ketQua));
+                bieuThucDangNhap.setLength(0);
+                bieuThucDangNhap.append(ketQua);
+                vuaTinhXong = true;
             } catch (Exception e) {
-                tvResult.setText("Math Error");
+                tvResult.setText("Lỗi");
             }
             return;
         }
 
         if (btn == btnAdd || btn == btnSub || btn == btnMul || btn == btnDiv || btn == btnMod) {
-            if (!lastInputIsOperator && currentExpression.length() > 0) {
-                currentExpression.append(getOperatorSymbol(btn));
-                lastInputIsOperator = true;
-                justEvaluated = false;
+            if (!kyTuCuoiLaToanTu && bieuThucDangNhap.length() > 0) {
+                bieuThucDangNhap.append(kyTuToanTu(btn));
+                kyTuCuoiLaToanTu = true;
+                vuaTinhXong = false;
             }
         } else {
-            if (justEvaluated) {
-                currentExpression.setLength(0);
+            if (vuaTinhXong) {
+                bieuThucDangNhap.setLength(0);
                 tvExpression.setText("");
-                justEvaluated = false;
+                vuaTinhXong = false;
             }
-            currentExpression.append(btn.getText().toString());
-            lastInputIsOperator = false;
+            bieuThucDangNhap.append(btn.getText().toString());
+            kyTuCuoiLaToanTu = false;
         }
 
-        tvResult.setText(currentExpression.toString());
+        tvResult.setText(bieuThucDangNhap.toString());
     }
 
-    private boolean isOperator(char c) {
+    private boolean laToanTu(char c) {
         return c == '+' || c == '-' || c == '×' || c == '÷' || c == '%';
     }
 
-    private String getOperatorSymbol(Button btn) {
+    private String kyTuToanTu(Button btn) {
         if (btn == btnAdd) return "+";
         if (btn == btnSub) return "-";
         if (btn == btnMul) return "×";
@@ -140,76 +140,76 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return "";
     }
 
-    private String formatResult(double result) {
-        if (result == (long) result) {
-            return String.format("%d", (long) result); // Hiện số nguyên
+    private String dinhDangKetQua(double ketQua) {
+        if (ketQua == (long) ketQua) {
+            return String.format("%d", (long) ketQua);
         } else {
-            String text = String.valueOf(result);
+            String text = String.valueOf(ketQua);
             if (text.length() > 15) {
-                text = text.substring(0, 15); // Giới hạn tối đa 12 ký tự để vừa màn hình
+                text = text.substring(0, 15);
             }
             return text;
         }
     }
 
-    private double eval(String expr) {
+    private double tinhKetQua(String bieuThuc) {
         return new Object() {
-            int pos = -1, ch;
+            int viTri = -1, kyTu;
 
-            void nextChar() {
-                ch = (++pos < expr.length()) ? expr.charAt(pos) : -1;
+            void kyTuTiepTheo() {
+                kyTu = (++viTri < bieuThuc.length()) ? bieuThuc.charAt(viTri) : -1;
             }
 
-            boolean eat(int charToEat) {
-                while (ch == ' ') nextChar();
-                if (ch == charToEat) {
-                    nextChar();
+            boolean anKyTu(int kyTuCanAn) {
+                while (kyTu == ' ') kyTuTiepTheo();
+                if (kyTu == kyTuCanAn) {
+                    kyTuTiepTheo();
                     return true;
                 }
                 return false;
             }
 
-            double parse() {
-                nextChar();
-                double x = parseExpression();
-                if (pos < expr.length()) throw new RuntimeException("Unexpected: " + (char) ch);
+            double phanTich() {
+                kyTuTiepTheo();
+                double x = bieuThucCongTru();
+                if (viTri < bieuThuc.length()) throw new RuntimeException("Ký tự lạ: " + (char) kyTu);
                 return x;
             }
 
-            double parseExpression() {
-                double x = parseTerm();
+            double bieuThucCongTru() {
+                double x = bieuThucNhanChia();
                 while (true) {
-                    if (eat('+')) x += parseTerm();
-                    else if (eat('-')) x -= parseTerm();
+                    if (anKyTu('+')) x += bieuThucNhanChia();
+                    else if (anKyTu('-')) x -= bieuThucNhanChia();
                     else return x;
                 }
             }
 
-            double parseTerm() {
-                double x = parseFactor();
+            double bieuThucNhanChia() {
+                double x = nhanSo();
                 while (true) {
-                    if (eat('*')) x *= parseFactor();
-                    else if (eat('/')) x /= parseFactor();
-                    else if (eat('%')) x %= parseFactor();
+                    if (anKyTu('*')) x *= nhanSo();
+                    else if (anKyTu('/')) x /= nhanSo();
+                    else if (anKyTu('%')) x %= nhanSo();
                     else return x;
                 }
             }
 
-            double parseFactor() {
-                if (eat('+')) return parseFactor();
-                if (eat('-')) return -parseFactor();
+            double nhanSo() {
+                if (anKyTu('+')) return nhanSo();
+                if (anKyTu('-')) return -nhanSo();
 
                 double x;
-                int startPos = this.pos;
-                if ((ch >= '0' && ch <= '9') || ch == '.') {
-                    while ((ch >= '0' && ch <= '9') || ch == '.') nextChar();
-                    x = Double.parseDouble(expr.substring(startPos, this.pos));
+                int viTriBatDau = this.viTri;
+                if ((kyTu >= '0' && kyTu <= '9') || kyTu == '.') {
+                    while ((kyTu >= '0' && kyTu <= '9') || kyTu == '.') kyTuTiepTheo();
+                    x = Double.parseDouble(bieuThuc.substring(viTriBatDau, this.viTri));
                 } else {
-                    throw new RuntimeException("Unexpected: " + (char) ch);
+                    throw new RuntimeException("Ký tự không hợp lệ: " + (char) kyTu);
                 }
 
                 return x;
             }
-        }.parse();
+        }.phanTich();
     }
 }
