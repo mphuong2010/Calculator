@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#EEEEEE"
+    tools:context=".MainActivity">
+
+    <!-- Tiêu đề -->
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#12C0D5"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="Calculator"
+        android:textAlignment="viewStart"
+        android:textColor="#FFFFFF"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <!-- Màn hình hiển thị -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="148dp"
+        android:background="#E9ECEF"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tvExpression"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:ellipsize="start"
+            android:gravity="end"
+            android:maxLines="1"
+            android:paddingBottom="4dp"
+            android:textColor="#444"
+            android:textSize="20sp"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvResult"
+            android:layout_width="match_parent"
+            android:layout_height="68dp"
+            android:ellipsize="start"
+            android:gravity="end"
+            android:maxLines="1"
+            android:textColor="#000"
+            android:textSize="40sp" />
+    </LinearLayout>
+
+    <!-- Grid layout nút -->
+    <GridLayout
+        android:id="@+id/gridLayout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="6"
+        android:padding="4dp"
+        android:columnCount="4"
+        android:rowCount="5">
+
+        <!-- Row 1 -->
+        <Button android:id="@+id/btnDel" style="@style/CalcButtonBlue" android:text="AC" />
+        <Button android:id="@+id/btnMod" style="@style/CalcButtonBlue" android:text="%" />
+        <Button android:id="@+id/btnBack" style="@style/CalcButtonBlue" android:text="⌫" />
+        <Button android:id="@+id/btnDiv" style="@style/CalcButtonGreen" android:text="÷" />
+
+        <!-- Row 2 -->
+        <Button android:id="@+id/btn7" style="@style/CalcButtonOrange" android:text="7" />
+        <Button android:id="@+id/btn8" style="@style/CalcButtonOrange" android:text="8" />
+        <Button android:id="@+id/btn9" style="@style/CalcButtonOrange" android:text="9" />
+        <Button android:id="@+id/btnMul" style="@style/CalcButtonGreen" android:text="×" />
+
+        <!-- Row 3 -->
+        <Button android:id="@+id/btn4" style="@style/CalcButtonOrange" android:text="4" />
+        <Button android:id="@+id/btn5" style="@style/CalcButtonOrange" android:text="5" />
+        <Button android:id="@+id/btn6" style="@style/CalcButtonOrange" android:text="6" />
+        <Button android:id="@+id/btnSub" style="@style/CalcButtonGreen" android:text="−" />
+
+        <!-- Row 4 -->
+        <Button android:id="@+id/btn1" style="@style/CalcButtonOrange" android:text="1" />
+        <Button android:id="@+id/btn2" style="@style/CalcButtonOrange" android:text="2" />
+        <Button android:id="@+id/btn3" style="@style/CalcButtonOrange" android:text="3" />
+        <Button android:id="@+id/btnAdd" style="@style/CalcButtonGreen" android:text="+" />
+
+        <!-- Row 5 -->
+        <Button android:id="@+id/btnDot" style="@style/CalcButtonOrange" android:text="." />
+        <Button android:id="@+id/btn0" style="@style/CalcButtonOrange" android:text="0" />
+
+        <Button
+            android:id="@+id/btnEq"
+            style="@style/CalcButtonRed"
+            android:text="=" />
+
+    </GridLayout>
+</LinearLayout>

@@ -1,0 +1,37 @@
+<resources>
+
+    <!-- Base style dùng chung -->
+    <style name="CalcButtonBase">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_rowWeight">1</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <!-- Nút cam: số -->
+    <style name="CalcButtonOrange" parent="CalcButtonBase">
+        <item name="android:backgroundTint">#FF9800</item>
+    </style>
+
+    <!-- Nút xanh lá: phép toán -->
+    <style name="CalcButtonGreen" parent="CalcButtonBase">
+        <item name="android:backgroundTint">#4CAF50</item>
+    </style>
+
+    <!-- Nút xanh dương: DEL, = -->
+    <style name="CalcButtonBlue" parent="CalcButtonBase">
+        <item name="android:backgroundTint">#2196F3</item>
+    </style>
+    <!-- Nút xanh dương: DEL, = -->
+    <style name="CalcButtonRed" parent="CalcButtonBase">
+        <item name="android:backgroundTint">#EB115C</item>
+        <item name="android:layout_columnSpan">2</item>
+    </style>
+
+
+
+</resources>
